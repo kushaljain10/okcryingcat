@@ -39,6 +39,8 @@
         },
       };
     </script>
+    <!-- JSZip for client-side ZIP creation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-hf3Gf9KpF1tA3pQhI2YxQwCGlV6UjzQQLdS6w1qkR2rV3ELdMnaM6lDqBq1BZeg45frQvYiuNfGwxzJEdC5eWw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
       /* Satisfying pop animation for the Copy button */
       @keyframes ok-pop {
@@ -318,31 +320,37 @@
         </h2>
 
         <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          <!-- 8 empty placeholders for memes (no overlay text) -->
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          ></div>
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          ></div>
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          ></div>
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          ></div>
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          ></div>
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          ></div>
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          ></div>
-          <div
-            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden"
-          ></div>
+          <!-- Real meme images from /memes (square previews) -->
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/1.png" alt="$OK meme 1" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/2.png" alt="$OK meme 2" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/3.png" alt="$OK meme 3" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/4.png" alt="$OK meme 4" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/5.png" alt="$OK meme 5" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/6.png" alt="$OK meme 6" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/7.png" alt="$OK meme 7" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/8.png" alt="$OK meme 8" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/9.png" alt="$OK meme 9" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal">
+            <img src="memes/10.png" alt="$OK meme 10" class="w-full h-full object-cover" loading="lazy" />
+          </div>
         </div>
 
         <div class="mt-8 flex justify-center">
@@ -442,11 +450,54 @@
 
       copyBtn.addEventListener("click", copyCA);
 
-      // Download All placeholder
-      document.getElementById("download-all").addEventListener("click", () => {
-        alert(
-          "Coming soon: a ZIP of all memes. Right-click save for now — and win those Twitter arguments. 👍"
-        );
+      // Download All: fetch memes/1.png..10.png and zip to ok.zip
+      document.getElementById("download-all").addEventListener("click", async () => {
+        const btn = document.getElementById("download-all");
+        const original = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Preparing ZIP…";
+        try {
+          if (!window.JSZip) throw new Error("JSZip not loaded");
+          const zip = new JSZip();
+          const folder = zip.folder("ok");
+          const files = Array.from({ length: 10 }, (_, i) => `memes/${i + 1}.png`);
+
+          // Fetch images as ArrayBuffers
+          const buffers = await Promise.all(
+            files.map(async (path) => {
+              const res = await fetch(path);
+              if (!res.ok) throw new Error(`Failed to fetch ${path}`);
+              const buf = await res.arrayBuffer();
+              return { name: path.split("/").pop(), buf };
+            })
+          );
+
+          // Add to zip under ok/
+          for (const { name, buf } of buffers) {
+            folder.file(name, buf);
+          }
+
+          // Generate ZIP and trigger download
+          const blob = await zip.generateAsync({ type: "blob" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "ok.zip";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          URL.revokeObjectURL(url);
+
+          btn.textContent = "Downloaded ok.zip 👍";
+          burstEmojis(["📦", "😿", "👍", "✨"]);
+          setTimeout(() => (btn.textContent = original), 1400);
+        } catch (e) {
+          console.error(e);
+          btn.textContent = "Download failed 😿";
+          setTimeout(() => (btn.textContent = original), 1600);
+        } finally {
+          btn.disabled = false;
+        }
       });
 
       // Simple emoji burst confetti
