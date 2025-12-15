@@ -907,6 +907,30 @@
         const delBtn = document.getElementById("delete-layer");
         const copyBtn = document.getElementById("copy-meme");
 
+        // Viewport-based behavior: prefer download on small screens
+        let preferDownload = window.matchMedia("(max-width: 799px)").matches;
+        function updateCopyBtnLabel() {
+          if (!copyBtn) return;
+          copyBtn.textContent = preferDownload ? "Download Meme" : "Copy to Clipboard";
+        }
+        updateCopyBtnLabel();
+        const mq = window.matchMedia("(max-width: 799px)");
+        // Update on MQ change
+        if (mq && mq.addEventListener) {
+          mq.addEventListener("change", (e) => {
+            preferDownload = e.matches;
+            updateCopyBtnLabel();
+          });
+        }
+        // Fallback: update on resize
+        window.addEventListener("resize", () => {
+          const current = window.innerWidth < 800;
+          if (current !== preferDownload) {
+            preferDownload = current;
+            updateCopyBtnLabel();
+          }
+        });
+
         // Text controls
         const textInput = document.getElementById("text-content");
         const textFont = document.getElementById("text-font");
@@ -1344,7 +1368,7 @@
           { passive: false }
         );
 
-        // Copy to clipboard / download fallback
+        // Copy to clipboard or download based on viewport preference
         copyBtn.addEventListener("click", async () => {
           const dpr = window.devicePixelRatio || 1;
           const w = canvas.width / dpr;
@@ -1420,7 +1444,8 @@
           try {
             const blob = await new Promise((res) => off.toBlob(res, "image/png"));
             if (!blob) throw new Error("Blob unavailable");
-            if (navigator.clipboard && window.ClipboardItem) {
+            const doCopy = !preferDownload && navigator.clipboard && window.ClipboardItem;
+            if (doCopy) {
               await navigator.clipboard.write([
                 new ClipboardItem({ "image/png": blob }),
               ]);
