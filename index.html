@@ -565,6 +565,12 @@
                     Choose Image
                   </button>
                   <button
+                    id="meme-use-template"
+                    class="px-4 py-2 rounded-xl bg-gray-200 text-gray-900 font-semibold hover:bg-gray-300"
+                  >
+                    Use template
+                  </button>
+                  <button
                     id="meme-add-cat"
                     class="px-4 py-2 rounded-xl bg-black text-white font-semibold hover:bg-gray-800"
                   >
@@ -899,6 +905,7 @@
         // Controls
         const fileInput = document.getElementById("meme-file");
         const uploadBtn = document.getElementById("meme-upload");
+        const templateBtn = document.getElementById("meme-use-template");
         const addCatBtn = document.getElementById("meme-add-cat");
         const scaleInput = document.getElementById("layer-scale");
         const rotInput = document.getElementById("layer-rotation");
@@ -1161,6 +1168,18 @@
           };
           img.src = url;
         });
+
+        // Use template.png as base image
+        if (templateBtn) {
+          templateBtn.addEventListener("click", () => {
+            const img = new Image();
+            img.onload = () => {
+              baseImage = img;
+              draw();
+            };
+            img.src = "template.png";
+          });
+        }
 
         addCatBtn.addEventListener("click", async () => {
           try {
