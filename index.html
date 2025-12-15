@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>$OK — The OK Crying Cat</title>
+    <meta
+      name="description"
+      content="$OK — The Internet's Emotional Punctuation. A timeless, tier-1 reaction meme on Solana."
+    />
+    <link rel="icon" href="catnobg.png" type="image/png" />
+    <meta property="og:title" content="$OK — The OK Crying Cat 😿👍" />
+    <meta
+      property="og:description"
+      content="The Internet's emotional punctuation. Copy the CA and deploy feelings in your chats."
+    />
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fun fonts: Comic Neue as a friendly stand-in for Comic Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              funny: ['"Comic Neue"', '"Comic Sans MS"', "cursive"],
+              sans: ["Inter", "system-ui", "sans-serif"],
+            },
+            boxShadow: {
+              pop: "0 10px 25px -5px rgba(16, 185, 129, 0.35), 0 8px 10px -6px rgba(16, 185, 129, 0.3)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Satisfying pop animation for the Copy button */
+      @keyframes ok-pop {
+        0% {
+          transform: scale(1);
+        }
+        40% {
+          transform: scale(1.06);
+        }
+        60% {
+          transform: scale(0.98);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .animate-ok-pop {
+        animation: ok-pop 300ms ease-in-out;
+      }
+
+      /* Wiggle and shimmer for playful vibes */
+      @keyframes ok-wiggle {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(1.2deg);
+        }
+        50% {
+          transform: rotate(-1.2deg);
+        }
+        75% {
+          transform: rotate(0.6deg);
+        }
+      }
+      .hover-wiggle:hover {
+        animation: ok-wiggle 350ms ease-in-out;
+      }
+
+      /* Emoji burst */
+      @keyframes emoji-rise {
+        0% {
+          transform: translate(-50%, 10px);
+          opacity: 0;
+        }
+        30% {
+          opacity: var(--fade, 0.8);
+        }
+        100% {
+          transform: translate(calc(-50% + var(--drift, 0px)), -60px);
+          opacity: 0;
+        }
+      }
+      .emoji-burst .emoji {
+        animation: emoji-rise 1000ms ease-out;
+      }
+      /* Subtle page background accent */
+      body {
+        background-image: radial-gradient(
+          circle at 50% -20%,
+          #fafafa 0%,
+          #ffffff 60%
+        );
+      }
+
+      /* Shimmer gradient text for the $OK heading */
+      .shimmer-text {
+        background-image: linear-gradient(90deg, #111 0%, #444 50%, #111 100%);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: bg-shimmer 4s ease-in-out infinite;
+      }
+      @keyframes bg-shimmer {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* Gentle floating for hero image card */
+      .float-slow {
+        animation: float-slow 5s ease-in-out infinite;
+      }
+      @keyframes float-slow {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+      .tilt-hover:hover {
+        transform: perspective(800px) rotateX(0.6deg) rotateY(-0.6deg);
+        transition: transform 200ms ease;
+      }
+
+      /* Scroll reveal */
+      .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: opacity 600ms ease, transform 600ms ease;
+      }
+      .reveal-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Soft pulse for primary CTA */
+      @keyframes pulse-soft {
+        0%,
+        100% {
+          box-shadow: 0 0 0 rgba(16, 185, 129, 0);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.1);
+        }
+      }
+      .pulse-soft {
+        animation: pulse-soft 4s ease-in-out infinite;
+      }
+      /* Background floating cats */
+      .cat-float {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--size, 160px);
+        height: auto;
+        opacity: 0.5; /* 50% as requested */
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.1));
+        will-change: transform;
+        transform: translate(var(--fromX), var(--fromY));
+        animation: cat-drift var(--dur, 18s) linear forwards;
+      }
+      @keyframes cat-drift {
+        from {
+          transform: translate(var(--fromX), var(--fromY))
+            rotate(var(--fromR, 0deg));
+        }
+        to {
+          transform: translate(var(--toX), var(--toY)) rotate(var(--toR, 0deg));
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-white text-gray-900 font-sans">
+    <!-- Floating background cats layer -->
+    <div id="bg-floats" class="fixed inset-0 pointer-events-none z-0"></div>
+    <!-- Page wrapper -->
+    <main class="min-h-screen relative z-10">
+      <!-- NAV (kept minimal, meme-first) -->
+      <header class="border-b border-gray-100">
+        <div
+          class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between"
+        >
+          <div class="flex items-center gap-3">
+            <span class="text-2xl font-black font-funny">$OK</span>
+            <span class="text-sm text-gray-500">The OK Crying Cat 😿👍</span>
+          </div>
+          <div class="hidden sm:flex items-center gap-3 text-sm">
+            <a href="#vault" class="text-gray-600 hover:text-gray-900">Vault</a>
+            <a href="#thesis" class="text-gray-600 hover:text-gray-900"
+              >Thesis</a
+            >
+          </div>
+        </div>
+      </header>
+
+      <!-- HERO SECTION -->
+      <section class="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+        <div class="text-center">
+          <h1
+            class="font-funny font-black text-6xl sm:text-8xl md:text-9xl tracking-tight shimmer-text reveal"
+          >
+            $OK
+          </h1>
+
+          <!-- Contract address + Copy CTA (moved here instead of badges) -->
+          <div
+            class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 reveal"
+          >
+            <div
+              class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl p-4 sm:p-5"
+            >
+              <div class="text-xs uppercase tracking-widest text-gray-500">
+                Contract Address
+              </div>
+              <div
+                id="ca-text"
+                class="mt-2 font-mono text-base sm:text-lg md:text-xl break-all select-all"
+              >
+                F1h8SDKjX6P3pTNzuJYv1VhrEjbtMh76UZYRwiXjpump
+              </div>
+            </div>
+            <button
+              id="copy-btn"
+              class="shrink-0 inline-flex items-center justify-center rounded-2xl px-5 py-4 text-base sm:text-lg font-semibold bg-emerald-500 text-white shadow-lg shadow-emerald-200 hover:bg-emerald-600 active:bg-emerald-700 transition-all duration-200 hover:scale-[1.02] pulse-soft hover-wiggle"
+              aria-live="polite"
+            >
+              Copy CA 📋
+            </button>
+          </div>
+          <p class="mt-2 text-xs text-gray-500">
+            Tap to copy — deploy the cat in your chats. 😿👍 (We only do
+            emotions.)
+          </p>
+        </div>
+
+        <!-- Main image placeholder -->
+        <div class="mt-10">
+          <div
+            class="relative overflow-hidden rounded-2xl border border-gray-200 bg-gray-50 float-slow tilt-hover reveal"
+          >
+            <div class="aspect-[16/9]">
+              <img
+                src="banner.png"
+                alt="Thumbs Up Crying Cat $OK banner"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Contract address section moved above; removed here to avoid duplication -->
+      </section>
+
+      <!-- THESIS SECTION -->
+      <section
+        id="thesis"
+        class="max-w-6xl mx-auto px-4 py-12 sm:py-16 border-t border-gray-100"
+      >
+        <h2 class="font-funny text-3xl sm:text-4xl font-black">
+          The Thesis (Why We Are Tier-1)
+        </h2>
+        <div class="mt-6 grid sm:grid-cols-3 gap-6">
+          <div class="p-5 border border-gray-200 rounded-2xl bg-white reveal">
+            <div class="font-semibold text-lg">High Persistence 😼</div>
+            <p class="mt-2 text-gray-700">
+              Unlike your ex, we stick around. Not a one-week trend — re-used
+              across months, years, and every group chat meltdown.
+            </p>
+          </div>
+          <div class="p-5 border border-gray-200 rounded-2xl bg-white reveal">
+            <div class="font-semibold text-lg">Infinite Utility ♾️</div>
+            <p class="mt-2 text-gray-700">
+              Tier-1 reaction meme. Instantly readable emotion. Use for wins,
+              losses, cope, and "it’s fine" denial arcs.
+            </p>
+          </div>
+          <div class="p-5 border border-gray-200 rounded-2xl bg-white reveal">
+            <div class="font-semibold text-lg">The Strategy 🧪</div>
+            <p class="mt-2 text-gray-700">
+              It's not about the token; it's about deploying the cat as
+              emotional punctuation in every chat on earth. Feel first.
+              Speculate never (ok sometimes). 👍
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- VAULT / GALLERY -->
+      <section
+        id="vault"
+        class="max-w-6xl mx-auto px-4 py-12 sm:py-16 border-t border-gray-100"
+      >
+        <h2 class="font-funny text-3xl sm:text-4xl font-black">
+          The Vault of Coping
+        </h2>
+
+        <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <!-- 8 empty placeholders for memes (no overlay text) -->
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
+          ></div>
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
+          ></div>
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
+          ></div>
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
+          ></div>
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
+          ></div>
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
+          ></div>
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
+          ></div>
+          <div
+            class="group relative aspect-[4/3] rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden"
+          ></div>
+        </div>
+
+        <div class="mt-8 flex justify-center">
+          <button
+            id="download-all"
+            class="rounded-2xl px-5 py-4 text-base sm:text-lg font-semibold bg-black text-white hover:bg-gray-800 active:bg-gray-900 transition-colors hover-wiggle"
+          >
+            Download All (For Twitter arguments & life coping)
+          </button>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="border-t border-gray-100">
+        <div class="max-w-6xl mx-auto px-4 py-10">
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between gap-4"
+          >
+            <div class="flex items-center gap-4">
+              <a href="#" class="text-gray-700 hover:text-black font-semibold"
+                >X (Twitter)</a
+              >
+              <span class="text-gray-300">•</span>
+              <a href="#" class="text-gray-700 hover:text-black font-semibold"
+                >Community</a
+              >
+              <span class="text-gray-300">•</span>
+              <a
+                href="https://knowyourmeme.com/memes/thumbs-up-crying-cat"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-gray-700 hover:text-black font-semibold"
+                aria-label="KnowYourMeme page: Thumbs Up Crying Cat"
+              >
+                KnowYourMeme
+              </a>
+            </div>
+            <div class="text-xs text-gray-500">
+              © 2025 $OK. We are literally just a cat giving a thumbs up. NFA.
+              DYOR on feelings.
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script>
+      // Copy-to-clipboard with satisfying animation and status updates
+      const copyBtn = document.getElementById("copy-btn");
+      const caText = document.getElementById("ca-text");
+      const originalBtnText = copyBtn.textContent;
+
+      async function copyCA() {
+        const text = caText.textContent.trim();
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            // Fallback: create a temporary textarea
+            const t = document.createElement("textarea");
+            t.value = text;
+            document.body.appendChild(t);
+            t.select();
+            document.execCommand("copy");
+            document.body.removeChild(t);
+          }
+
+          // Visual feedback
+          copyBtn.textContent = "Copied! 😿👍";
+          copyBtn.classList.add("animate-ok-pop");
+          copyBtn.classList.add("ring-2", "ring-emerald-300", "shadow-pop");
+
+          // Emoji burst confetti
+          burstEmojis(["😿", "👍", "💬", "✨"]);
+
+          // Revert after a moment
+          setTimeout(() => {
+            copyBtn.textContent = originalBtnText;
+            copyBtn.classList.remove("animate-ok-pop");
+            copyBtn.classList.remove(
+              "ring-2",
+              "ring-emerald-300",
+              "shadow-pop"
+            );
+          }, 1200);
+        } catch (err) {
+          console.error("Copy failed:", err);
+          copyBtn.textContent = "Something broke 😿";
+          setTimeout(() => (copyBtn.textContent = originalBtnText), 1500);
+        }
+      }
+
+      copyBtn.addEventListener("click", copyCA);
+
+      // Download All placeholder
+      document.getElementById("download-all").addEventListener("click", () => {
+        alert(
+          "Coming soon: a ZIP of all memes. Right-click save for now — and win those Twitter arguments. 👍"
+        );
+      });
+
+      // Simple emoji burst confetti
+      function burstEmojis(list) {
+        const container = document.createElement("div");
+        container.style.position = "fixed";
+        container.style.left = "0";
+        container.style.top = "0";
+        container.style.width = "100%";
+        container.style.height = "100%";
+        container.style.pointerEvents = "none";
+        container.className = "emoji-burst";
+        document.body.appendChild(container);
+
+        const count = 14;
+        for (let i = 0; i < count; i++) {
+          const span = document.createElement("span");
+          span.textContent = list[Math.floor(Math.random() * list.length)];
+          span.style.position = "absolute";
+          span.style.left = Math.random() * 100 + "%";
+          span.style.top = "50%";
+          span.style.fontSize = 16 + Math.random() * 18 + "px";
+          span.style.opacity = "0";
+          span.style.transform = "translate(-50%, 0)";
+          span.className = "emoji";
+          container.appendChild(span);
+
+          // random animation duration & horizontal drift via CSS variables
+          const drift = Math.random() * 60 - 30 + "px";
+          span.style.setProperty("--drift", drift);
+          span.style.setProperty(
+            "--fade",
+            (0.6 + Math.random() * 0.6).toString()
+          );
+        }
+
+        // remove after animation
+        setTimeout(() => {
+          document.body.removeChild(container);
+        }, 1200);
+      }
+
+      // Scroll reveal observer
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("reveal-visible");
+              observer.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.12 }
+      );
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
+
+      // Floating background cats
+      const floatContainer = document.getElementById("bg-floats");
+      function spawnCatFloat() {
+        const img = document.createElement("img");
+        img.src = "catnobg.png";
+        img.className = "cat-float";
+
+        // Random size: 60px – 240px
+        const size = Math.floor(60 + Math.random() * 180);
+        img.style.setProperty("--size", size + "px");
+
+        // Direction: left-to-right or right-to-left
+        const leftToRight = Math.random() < 0.5;
+        const fromX = leftToRight ? "-20vw" : "120vw";
+        const toX = leftToRight ? "120vw" : "-20vw";
+
+        // Vertical path: random start/end along viewport
+        const fromY = Math.floor(Math.random() * 100) + "vh";
+        const toY = Math.floor(Math.random() * 100) + "vh";
+
+        // Gentle rotation variance
+        const fromR = (Math.random() * 20 - 10).toFixed(1) + "deg";
+        const toR = (Math.random() * 20 - 10).toFixed(1) + "deg";
+
+        // Duration: 12s – 30s
+        const dur = (12 + Math.random() * 18).toFixed(1) + "s";
+
+        img.style.setProperty("--fromX", fromX);
+        img.style.setProperty("--toX", toX);
+        img.style.setProperty("--fromY", fromY);
+        img.style.setProperty("--toY", toY);
+        img.style.setProperty("--fromR", fromR);
+        img.style.setProperty("--toR", toR);
+        img.style.setProperty("--dur", dur);
+
+        floatContainer.appendChild(img);
+        img.addEventListener("animationend", () => {
+          img.remove();
+        });
+      }
+
+      function startCatFloats() {
+        // Seed a few cats
+        for (let i = 0; i < 4; i++) spawnCatFloat();
+
+        // Keep spawning, with a soft cap
+        const maxConcurrent = 8;
+        function loop() {
+          if (floatContainer.childElementCount < maxConcurrent) {
+            spawnCatFloat();
+          }
+          const next = 1500 + Math.random() * 2500; // 1.5s – 4s
+          setTimeout(loop, next);
+        }
+        loop();
+      }
+
+      // Initialize after page loads
+      document.addEventListener("DOMContentLoaded", startCatFloats);
+    </script>
+  </body>
+</html>
