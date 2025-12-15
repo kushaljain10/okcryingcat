@@ -335,108 +335,11 @@
           The Vault of Coping
         </h2>
 
-        <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          <!-- Real meme images from /memes (square previews) -->
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/1.png"
-              alt="$ok meme 1"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/2.png"
-              alt="$ok meme 2"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/3.png"
-              alt="$ok meme 3"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/4.png"
-              alt="$ok meme 4"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/5.png"
-              alt="$ok meme 5"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/6.png"
-              alt="$ok meme 6"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/7.png"
-              alt="$ok meme 7"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/8.png"
-              alt="$ok meme 8"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/9.png"
-              alt="$ok meme 9"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div
-            class="group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal"
-          >
-            <img
-              src="memes/10.png"
-              alt="$ok meme 10"
-              class="w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
+        <div
+          id="meme-grid"
+          class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          <!-- Populated dynamically by JavaScript -->
         </div>
 
         <div class="mt-8 flex justify-center">
@@ -480,15 +383,35 @@
                 <div class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <label class="block">
                     <span class="text-xs text-gray-600">Size</span>
-                    <input id="text-size" type="range" min="20" max="200" step="2" class="w-full" />
+                    <input
+                      id="text-size"
+                      type="range"
+                      min="20"
+                      max="200"
+                      step="2"
+                      class="w-full"
+                    />
                   </label>
                   <label class="block">
                     <span class="text-xs text-gray-600">Color</span>
-                    <input id="text-color" type="color" value="#ffffff" class="w-full h-9 p-0 border border-gray-200 rounded-xl" />
+                    <input
+                      id="text-color"
+                      type="color"
+                      value="#ffffff"
+                      class="w-full h-9 p-0 border border-gray-200 rounded-xl"
+                    />
                   </label>
                   <label class="block">
                     <span class="text-xs text-gray-600">Outline</span>
-                    <input id="text-outline" type="range" min="0" max="16" step="1" value="6" class="w-full" />
+                    <input
+                      id="text-outline"
+                      type="range"
+                      min="0"
+                      max="16"
+                      step="1"
+                      value="6"
+                      class="w-full"
+                    />
                   </label>
                 </div>
                 <div class="mt-2 flex flex-wrap items-center gap-2">
@@ -587,7 +510,12 @@
                     placeholder="Type your caption"
                     class="px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-300"
                   />
-                  <button id="add-text" class="px-4 py-2 rounded-xl bg-black text-white font-semibold hover:bg-gray-800">Add Text</button>
+                  <button
+                    id="add-text"
+                    class="px-4 py-2 rounded-xl bg-black text-white font-semibold hover:bg-gray-800"
+                  >
+                    Add Text
+                  </button>
                 </div>
               </div>
 
@@ -717,7 +645,30 @@
         });
       }
 
-      // Download All: fetch memes/1.png..10.png and zip to ok.zip
+      // Populate meme grid dynamically from /memes/1.png..N
+      (function populateMemeGrid() {
+        const grid = document.getElementById("meme-grid");
+        if (!grid) return;
+        const maxCount = 30; // try up to 30; missing files will be skipped
+        for (let i = 1; i <= maxCount; i++) {
+          const card = document.createElement("div");
+          card.className =
+            "group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal";
+          const img = document.createElement("img");
+          img.src = `memes/${i}.png`;
+          img.alt = `$ok meme ${i}`;
+          img.className = "w-full h-full object-cover";
+          img.loading = "lazy";
+          img.onerror = () => {
+            // Remove card if image is missing
+            card.remove();
+          };
+          card.appendChild(img);
+          grid.appendChild(card);
+        }
+      })();
+
+      // Download All: fetch memes/1.png..N (skip missing) and zip to ok.zip
       document
         .getElementById("download-all")
         .addEventListener("click", async () => {
@@ -729,20 +680,20 @@
             await loadJSZip();
             const zip = new JSZip();
             const folder = zip.folder("ok");
-            const files = Array.from(
-              { length: 10 },
-              (_, i) => `memes/${i + 1}.png`
-            );
+            const files = Array.from({ length: 30 }, (_, i) => `memes/${i + 1}.png`);
 
-            // Fetch images as ArrayBuffers
-            const buffers = await Promise.all(
-              files.map(async (path) => {
+            // Fetch images as ArrayBuffers, skipping missing
+            const buffers = [];
+            for (const path of files) {
+              try {
                 const res = await fetch(path);
-                if (!res.ok) throw new Error(`Failed to fetch ${path}`);
+                if (!res.ok) continue;
                 const buf = await res.arrayBuffer();
-                return { name: path.split("/").pop(), buf };
-              })
-            );
+                buffers.push({ name: path.split("/").pop(), buf });
+              } catch (_) {
+                // skip missing
+              }
+            }
 
             // Add to zip under ok/
             for (const { name, buf } of buffers) {
@@ -918,7 +869,9 @@
         let preferDownload = window.matchMedia("(max-width: 799px)").matches;
         function updateCopyBtnLabel() {
           if (!copyBtn) return;
-          copyBtn.textContent = preferDownload ? "Download Meme" : "Copy to Clipboard";
+          copyBtn.textContent = preferDownload
+            ? "Download Meme"
+            : "Copy to Clipboard";
         }
         updateCopyBtnLabel();
         const mq = window.matchMedia("(max-width: 799px)");
@@ -1042,7 +995,9 @@
         }
 
         function textFamilyFrom(value) {
-          return value === "anton" ? "Anton, Impact, sans-serif" : "'Comic Neue', 'Comic Sans MS', cursive";
+          return value === "anton"
+            ? "Anton, Impact, sans-serif"
+            : "'Comic Neue', 'Comic Sans MS', cursive";
         }
 
         function drawTextLayer(layer) {
@@ -1054,7 +1009,10 @@
           ctx.rotate((layer.rotation * Math.PI) / 180);
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
-          ctx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+          ctx.font = `${layer.weight} ${Math.max(
+            8,
+            layer.fontSize
+          )}px ${textFamilyFrom(layer.font)}`;
           ctx.lineJoin = "round";
           if (layer.strokeWidth > 0) {
             ctx.strokeStyle = layer.stroke;
@@ -1111,10 +1069,14 @@
               sin = Math.sin(rad);
             const lx = dx * cos - dy * sin;
             const ly = dx * sin + dy * cos;
-            let bw = 0, bh = 0;
+            let bw = 0,
+              bh = 0;
             if (layer.type === "text") {
               ctx.save();
-              ctx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+              ctx.font = `${layer.weight} ${Math.max(
+                8,
+                layer.fontSize
+              )}px ${textFamilyFrom(layer.font)}`;
               const m = ctx.measureText(layer.text);
               ctx.restore();
               bw = m.width;
@@ -1139,10 +1101,16 @@
               }
               // Toggle edit sections visibility
               if (textEditSection) {
-                textEditSection.classList.toggle("hidden", layer.type !== "text");
+                textEditSection.classList.toggle(
+                  "hidden",
+                  layer.type !== "text"
+                );
               }
               if (catEditSection) {
-                catEditSection.classList.toggle("hidden", layer.type !== "image");
+                catEditSection.classList.toggle(
+                  "hidden",
+                  layer.type !== "image"
+                );
               }
               return layer;
             }
@@ -1270,7 +1238,10 @@
         textSize.addEventListener("input", () => {
           const layer = layers.find((l) => l.id === selectedLayerId);
           if (!layer || layer.type !== "text") return;
-          layer.fontSize = parseInt(textSize.value || String(layer.fontSize), 10);
+          layer.fontSize = parseInt(
+            textSize.value || String(layer.fontSize),
+            10
+          );
           draw();
         });
         textColor.addEventListener("input", () => {
@@ -1282,7 +1253,10 @@
         textOutline.addEventListener("input", () => {
           const layer = layers.find((l) => l.id === selectedLayerId);
           if (!layer || layer.type !== "text") return;
-          layer.strokeWidth = parseInt(textOutline.value || String(layer.strokeWidth), 10);
+          layer.strokeWidth = parseInt(
+            textOutline.value || String(layer.strokeWidth),
+            10
+          );
           draw();
         });
         textFont.addEventListener("change", async () => {
@@ -1290,7 +1264,9 @@
           if (!layer || layer.type !== "text") return;
           layer.font = textFont.value || layer.font;
           if (document.fonts && document.fonts.ready) {
-            try { await document.fonts.ready; } catch {}
+            try {
+              await document.fonts.ready;
+            } catch {}
           }
           draw();
         });
@@ -1439,7 +1415,10 @@
               const text = layer.text;
               octx.textAlign = "center";
               octx.textBaseline = "middle";
-              octx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+              octx.font = `${layer.weight} ${Math.max(
+                8,
+                layer.fontSize
+              )}px ${textFamilyFrom(layer.font)}`;
               octx.lineJoin = "round";
               if (layer.strokeWidth > 0) {
                 octx.strokeStyle = layer.stroke;
@@ -1457,13 +1436,18 @@
           }
 
           if (document.fonts && document.fonts.ready) {
-            try { await document.fonts.ready; } catch {}
+            try {
+              await document.fonts.ready;
+            } catch {}
           }
 
           try {
-            const blob = await new Promise((res) => off.toBlob(res, "image/png"));
+            const blob = await new Promise((res) =>
+              off.toBlob(res, "image/png")
+            );
             if (!blob) throw new Error("Blob unavailable");
-            const doCopy = !preferDownload && navigator.clipboard && window.ClipboardItem;
+            const doCopy =
+              !preferDownload && navigator.clipboard && window.ClipboardItem;
             if (doCopy) {
               await navigator.clipboard.write([
                 new ClipboardItem({ "image/png": blob }),
