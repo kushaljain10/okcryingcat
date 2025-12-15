@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&family=Inter:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Comic+Neue:wght@700&family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
     />
     <script>
@@ -439,14 +439,24 @@
       </section>
 
       <!-- MEME MAKER -->
-      <section id="maker" class="max-w-6xl mx-auto px-4 py-12 sm:py-16 border-t border-gray-100">
-        <h2 class="font-funny text-3xl sm:text-4xl font-black">OK Meme Maker</h2>
-        <p class="mt-2 text-gray-600 text-sm">Drop a pic, slap on the OK Cat, then drag, rotate, flip. Copy to clipboard or download. 😿👍</p>
+      <section
+        id="maker"
+        class="max-w-6xl mx-auto px-4 py-12 sm:py-16 border-t border-gray-100"
+      >
+        <h2 class="font-funny text-3xl sm:text-4xl font-black">
+          OK Meme Maker
+        </h2>
+        <p class="mt-2 text-gray-600 text-sm">
+          Drop a pic, slap on the OK Cat, then drag, rotate, flip. Copy to
+          clipboard or download. 😿👍
+        </p>
 
         <div class="mt-6 grid lg:grid-cols-2 gap-6">
           <!-- Canvas area -->
           <div class="rounded-2xl border border-gray-200 bg-gray-50 p-3 reveal">
-            <div class="aspect-square rounded-xl overflow-hidden bg-white flex items-center justify-center">
+            <div
+              class="aspect-square rounded-xl overflow-hidden bg-white flex items-center justify-center"
+            >
               <canvas id="meme-canvas" class="w-full h-full"></canvas>
             </div>
           </div>
@@ -457,32 +467,123 @@
               <div>
                 <div class="text-sm text-gray-600">Upload base image</div>
                 <div class="mt-2 flex items-center gap-3">
-                  <input id="meme-file" type="file" accept="image/*" class="hidden" />
-                  <button id="meme-upload" class="px-4 py-2 rounded-xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 hover-wiggle">Choose Image</button>
-                  <button id="meme-add-cat" class="px-4 py-2 rounded-xl bg-black text-white font-semibold hover:bg-gray-800">Add OK Cat</button>
+                  <input
+                    id="meme-file"
+                    type="file"
+                    accept="image/*"
+                    class="hidden"
+                  />
+                  <button
+                    id="meme-upload"
+                    class="px-4 py-2 rounded-xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 hover-wiggle"
+                  >
+                    Choose Image
+                  </button>
+                  <button
+                    id="meme-add-cat"
+                    class="px-4 py-2 rounded-xl bg-black text-white font-semibold hover:bg-gray-800"
+                  >
+                    Add OK Cat
+                  </button>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <div class="text-sm text-gray-600">Add text caption</div>
+                <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input
+                    id="text-content"
+                    type="text"
+                    placeholder="Type your caption"
+                    class="px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+                  />
+                  <select
+                    id="text-font"
+                    class="px-3 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-emerald-300"
+                  >
+                    <option value="anton">OK Loud</option>
+                    <option value="comic-neue">OK Giggles</option>
+                  </select>
+                </div>
+                <div class="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <label class="block">
+                    <span class="text-xs text-gray-600">Size</span>
+                    <input id="text-size" type="range" min="20" max="200" step="2" class="w-full" />
+                  </label>
+                  <label class="block">
+                    <span class="text-xs text-gray-600">Color</span>
+                    <input id="text-color" type="color" value="#ffffff" class="w-full h-9 p-0 border border-gray-200 rounded-xl" />
+                  </label>
+                  <label class="block">
+                    <span class="text-xs text-gray-600">Outline</span>
+                    <input id="text-outline" type="range" min="0" max="16" step="1" value="6" class="w-full" />
+                  </label>
+                  <label class="inline-flex items-center gap-2">
+                    <input id="text-upper" type="checkbox" class="rounded border-gray-300" />
+                    <span class="text-xs text-gray-600">Uppercase</span>
+                  </label>
+                </div>
+                <div class="mt-2 flex flex-wrap items-center gap-2">
+                  <button id="add-text" class="px-4 py-2 rounded-xl bg-black text-white font-semibold hover:bg-gray-800">Add Text</button>
+                  <button id="add-top" class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200">Add Top</button>
+                  <button id="add-bottom" class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200">Add Bottom</button>
+                  <button id="update-text" class="px-3 py-2 rounded-xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600">Update Selected</button>
                 </div>
               </div>
 
               <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <label class="block">
                   <span class="text-sm text-gray-600">Scale</span>
-                  <input id="layer-scale" type="range" min="0.2" max="3" step="0.1" class="w-full" />
+                  <input
+                    id="layer-scale"
+                    type="range"
+                    min="0.2"
+                    max="3"
+                    step="0.1"
+                    class="w-full"
+                  />
                 </label>
                 <label class="block">
                   <span class="text-sm text-gray-600">Rotation</span>
-                  <input id="layer-rotation" type="range" min="0" max="360" step="1" class="w-full" />
+                  <input
+                    id="layer-rotation"
+                    type="range"
+                    min="0"
+                    max="360"
+                    step="1"
+                    class="w-full"
+                  />
                 </label>
               </div>
 
               <div class="mt-2 flex items-center gap-3">
-                <button id="flip-h" class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200">Flip H</button>
-                <button id="flip-v" class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200">Flip V</button>
-                <button id="delete-layer" class="px-3 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600">Delete</button>
+                <button
+                  id="flip-h"
+                  class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200"
+                >
+                  Flip H
+                </button>
+                <button
+                  id="flip-v"
+                  class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200"
+                >
+                  Flip V
+                </button>
+                <button
+                  id="delete-layer"
+                  class="px-3 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600"
+                >
+                  Delete
+                </button>
               </div>
 
               <div class="mt-3">
-                <button id="copy-meme" class="w-full px-5 py-4 rounded-2xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 hover-wiggle">Copy to Clipboard</button>
-                <p class="mt-2 text-xs text-gray-500">On mobile, this may download a PNG instead of copying.</p>
+                <button
+                  id="copy-meme"
+                  class="w-full px-5 py-4 rounded-2xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 hover-wiggle"
+                >
+                  Copy to Clipboard
+                </button>
               </div>
             </div>
           </div>
@@ -776,9 +877,9 @@
 
       // Meme Maker logic: canvas rendering and controls
       (function memeMaker() {
-        const canvas = document.getElementById('meme-canvas');
+        const canvas = document.getElementById("meme-canvas");
         if (!canvas) return;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
 
         // State
         let baseImage = null; // HTMLImageElement
@@ -788,15 +889,27 @@
         let dragOffset = { x: 0, y: 0 };
 
         // Controls
-        const fileInput = document.getElementById('meme-file');
-        const uploadBtn = document.getElementById('meme-upload');
-        const addCatBtn = document.getElementById('meme-add-cat');
-        const scaleInput = document.getElementById('layer-scale');
-        const rotInput = document.getElementById('layer-rotation');
-        const flipHBtn = document.getElementById('flip-h');
-        const flipVBtn = document.getElementById('flip-v');
-        const delBtn = document.getElementById('delete-layer');
-        const copyBtn = document.getElementById('copy-meme');
+        const fileInput = document.getElementById("meme-file");
+        const uploadBtn = document.getElementById("meme-upload");
+        const addCatBtn = document.getElementById("meme-add-cat");
+        const scaleInput = document.getElementById("layer-scale");
+        const rotInput = document.getElementById("layer-rotation");
+        const flipHBtn = document.getElementById("flip-h");
+        const flipVBtn = document.getElementById("flip-v");
+        const delBtn = document.getElementById("delete-layer");
+        const copyBtn = document.getElementById("copy-meme");
+
+        // Text controls
+        const textInput = document.getElementById("text-content");
+        const textFont = document.getElementById("text-font");
+        const textSize = document.getElementById("text-size");
+        const textColor = document.getElementById("text-color");
+        const textOutline = document.getElementById("text-outline");
+        const textUpper = document.getElementById("text-upper");
+        const addTextBtn = document.getElementById("add-text");
+        const addTopBtn = document.getElementById("add-top");
+        const addBottomBtn = document.getElementById("add-bottom");
+        const updateTextBtn = document.getElementById("update-text");
 
         // Resize canvas to square container size with devicePixelRatio
         function resizeCanvas() {
@@ -805,13 +918,13 @@
           const dpr = window.devicePixelRatio || 1;
           canvas.width = Math.max(1, Math.floor(size * dpr));
           canvas.height = Math.max(1, Math.floor(size * dpr));
-          canvas.style.width = size + 'px';
-          canvas.style.height = size + 'px';
+          canvas.style.width = size + "px";
+          canvas.style.height = size + "px";
           ctx.setTransform(1, 0, 0, 1, 0, 0);
           ctx.scale(dpr, dpr);
           draw();
         }
-        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener("resize", resizeCanvas);
         requestAnimationFrame(resizeCanvas);
 
         function clearCanvas() {
@@ -824,23 +937,44 @@
           clearCanvas();
           const w = canvas.width / (window.devicePixelRatio || 1);
           const h = canvas.height / (window.devicePixelRatio || 1);
+          let fitRect = null;
           // Draw base image fit contain
           if (baseImage) {
-            const fit = contain(baseImage.naturalWidth, baseImage.naturalHeight, w, h);
+            const fit = contain(
+              baseImage.naturalWidth,
+              baseImage.naturalHeight,
+              w,
+              h
+            );
             ctx.drawImage(baseImage, fit.x, fit.y, fit.width, fit.height);
+            fitRect = fit;
+            // Clip overlays to the bounds of the base image
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(fit.x, fit.y, fit.width, fit.height);
+            ctx.clip();
           } else {
             // Placeholder background
-            ctx.fillStyle = '#f8fafc';
+            ctx.fillStyle = "#f8fafc";
             ctx.fillRect(0, 0, w, h);
-            ctx.fillStyle = '#94a3b8';
-            ctx.textAlign = 'center';
-            ctx.font = '16px system-ui, -apple-system, Segoe UI, Roboto';
-            ctx.fillText('Upload an image or Add OK Cat', w / 2, h / 2);
+            ctx.fillStyle = "#94a3b8";
+            ctx.textAlign = "center";
+            ctx.font = "16px system-ui, -apple-system, Segoe UI, Roboto";
+            ctx.fillText("Upload an image or Add OK Cat", w / 2, h / 2);
           }
 
           // Draw layers
           for (const layer of layers) {
-            drawLayer(layer);
+            if (layer.type === "text") {
+              drawTextLayer(layer);
+            } else {
+              drawImageLayer(layer);
+            }
+          }
+
+          // Restore clipping if applied
+          if (fitRect) {
+            ctx.restore();
           }
         }
 
@@ -853,7 +987,7 @@
           return { x, y, width, height, ratio };
         }
 
-        function drawLayer(layer) {
+        function drawImageLayer(layer) {
           const imgW = layer.image.naturalWidth * layer.scale;
           const imgH = layer.image.naturalHeight * layer.scale;
 
@@ -861,12 +995,45 @@
           ctx.translate(layer.x, layer.y);
           ctx.rotate((layer.rotation * Math.PI) / 180);
           ctx.scale(layer.flipH ? -1 : 1, layer.flipV ? -1 : 1);
-          ctx.globalAlpha = layer.id === selectedLayerId ? 0.95 : 1;
           ctx.drawImage(layer.image, -imgW / 2, -imgH / 2, imgW, imgH);
           if (layer.id === selectedLayerId) {
-            ctx.strokeStyle = '#10b981';
+            ctx.strokeStyle = "#10b981";
             ctx.lineWidth = 2;
             ctx.strokeRect(-imgW / 2, -imgH / 2, imgW, imgH);
+          }
+          ctx.restore();
+        }
+
+        function textFamilyFrom(value) {
+          return value === "anton" ? "Anton, Impact, sans-serif" : "'Comic Neue', 'Comic Sans MS', cursive";
+        }
+
+        function drawTextLayer(layer) {
+          const w = canvas.width / (window.devicePixelRatio || 1);
+          const h = canvas.height / (window.devicePixelRatio || 1);
+          const text = layer.uppercase ? layer.text.toUpperCase() : layer.text;
+          ctx.save();
+          ctx.translate(layer.x, layer.y);
+          ctx.rotate((layer.rotation * Math.PI) / 180);
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+          ctx.lineJoin = "round";
+          if (layer.strokeWidth > 0) {
+            ctx.strokeStyle = layer.stroke;
+            ctx.lineWidth = layer.strokeWidth;
+            ctx.strokeText(text, 0, 0);
+          }
+          ctx.fillStyle = layer.fill;
+          ctx.fillText(text, 0, 0);
+          if (layer.id === selectedLayerId) {
+            // selection guide box
+            const m = ctx.measureText(text);
+            const tw = m.width;
+            const th = layer.fontSize * 1.2;
+            ctx.strokeStyle = "#10b981";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-tw / 2, -th / 2, tw, th);
           }
           ctx.restore();
         }
@@ -880,7 +1047,7 @@
               const size = Math.min(w, h) * 0.4;
               const scale = size / img.naturalWidth;
               const layer = {
-                id: 'layer-' + Math.random().toString(36).slice(2),
+                id: "layer-" + Math.random().toString(36).slice(2),
                 image: img,
                 x: w / 2,
                 y: h / 2,
@@ -892,7 +1059,7 @@
               resolve(layer);
             };
             img.onerror = reject;
-            img.src = 'catnobg.png';
+            img.src = "catnobg.png";
           });
         }
 
@@ -903,15 +1070,37 @@
             const dx = px - layer.x;
             const dy = py - layer.y;
             const rad = (-layer.rotation * Math.PI) / 180;
-            const cos = Math.cos(rad), sin = Math.sin(rad);
+            const cos = Math.cos(rad),
+              sin = Math.sin(rad);
             const lx = dx * cos - dy * sin;
             const ly = dx * sin + dy * cos;
-            const imgW = layer.image.naturalWidth * layer.scale;
-            const imgH = layer.image.naturalHeight * layer.scale;
-            if (Math.abs(lx) <= imgW / 2 && Math.abs(ly) <= imgH / 2) {
+            let bw = 0, bh = 0;
+            if (layer.type === "text") {
+              ctx.save();
+              ctx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+              const m = ctx.measureText(layer.uppercase ? layer.text.toUpperCase() : layer.text);
+              ctx.restore();
+              bw = m.width;
+              bh = layer.fontSize * 1.2;
+            } else {
+              bw = layer.image.naturalWidth * layer.scale;
+              bh = layer.image.naturalHeight * layer.scale;
+            }
+            if (Math.abs(lx) <= bw / 2 && Math.abs(ly) <= bh / 2) {
               selectedLayerId = layer.id;
-              scaleInput.value = String(layer.scale);
+              if (layer.type !== "text") {
+                scaleInput.value = String(layer.scale);
+              }
               rotInput.value = String(layer.rotation);
+              // Reflect text layer values into UI
+              if (layer.type === "text") {
+                textInput.value = layer.text;
+                textFont.value = layer.font;
+                textSize.value = String(layer.fontSize);
+                textColor.value = layer.fill;
+                textOutline.value = String(layer.strokeWidth);
+                textUpper.checked = !!layer.uppercase;
+              }
               return layer;
             }
           }
@@ -919,8 +1108,8 @@
         }
 
         // Events
-        uploadBtn.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', () => {
+        uploadBtn.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", () => {
           const file = fileInput.files?.[0];
           if (!file) return;
           const url = URL.createObjectURL(file);
@@ -933,51 +1122,149 @@
           img.src = url;
         });
 
-        addCatBtn.addEventListener('click', async () => {
+        addCatBtn.addEventListener("click", async () => {
           try {
             const layer = await createCatLayer();
+            layer.type = "image";
             layers.push(layer);
             selectedLayerId = layer.id;
             scaleInput.value = String(layer.scale);
             rotInput.value = String(layer.rotation);
             draw();
           } catch (e) {
-            alert('Failed to load cat image');
+            alert("Failed to load cat image");
           }
         });
 
-        scaleInput.addEventListener('input', () => {
-          const layer = layers.find(l => l.id === selectedLayerId);
+        scaleInput.addEventListener("input", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
           if (!layer) return;
           layer.scale = parseFloat(scaleInput.value);
           draw();
         });
-        rotInput.addEventListener('input', () => {
-          const layer = layers.find(l => l.id === selectedLayerId);
+        rotInput.addEventListener("input", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
           if (!layer) return;
           layer.rotation = parseFloat(rotInput.value);
           draw();
         });
 
-        flipHBtn.addEventListener('click', () => {
-          const layer = layers.find(l => l.id === selectedLayerId);
+        flipHBtn.addEventListener("click", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
           if (!layer) return;
           layer.flipH = !layer.flipH;
           draw();
         });
-        flipVBtn.addEventListener('click', () => {
-          const layer = layers.find(l => l.id === selectedLayerId);
+        flipVBtn.addEventListener("click", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
           if (!layer) return;
           layer.flipV = !layer.flipV;
           draw();
         });
-        delBtn.addEventListener('click', () => {
-          const idx = layers.findIndex(l => l.id === selectedLayerId);
+        delBtn.addEventListener("click", () => {
+          const idx = layers.findIndex((l) => l.id === selectedLayerId);
           if (idx >= 0) {
             layers.splice(idx, 1);
             selectedLayerId = null;
             draw();
           }
+        });
+
+        // Text layer creation helpers
+        function createTextLayerAt(yPos) {
+          const w = canvas.width / (window.devicePixelRatio || 1);
+          const h = canvas.height / (window.devicePixelRatio || 1);
+          const font = textFont.value || "anton";
+          const layer = {
+            id: "layer-" + Math.random().toString(36).slice(2),
+            type: "text",
+            text: (textInput.value || "OK").trim(),
+            font,
+            weight: font === "anton" ? "700" : "700",
+            fontSize: parseInt(textSize.value || "72", 10),
+            fill: textColor.value || "#ffffff",
+            stroke: "#000000",
+            strokeWidth: parseInt(textOutline.value || "6", 10),
+            uppercase: !!textUpper.checked,
+            x: w / 2,
+            y: yPos ?? h / 2,
+            rotation: 0,
+            flipH: false,
+            flipV: false,
+          };
+          return layer;
+        }
+
+        function addTextCommon(yPos) {
+          const layer = createTextLayerAt(yPos);
+          layers.push(layer);
+          selectedLayerId = layer.id;
+          rotInput.value = String(layer.rotation);
+          draw();
+        }
+
+        addTextBtn.addEventListener("click", () => addTextCommon());
+        addTopBtn.addEventListener("click", () => {
+          const h = canvas.height / (window.devicePixelRatio || 1);
+          addTextCommon(h * 0.12);
+        });
+        addBottomBtn.addEventListener("click", () => {
+          const h = canvas.height / (window.devicePixelRatio || 1);
+          addTextCommon(h * 0.88);
+        });
+
+        updateTextBtn.addEventListener("click", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
+          if (!layer || layer.type !== "text") return;
+          layer.text = (textInput.value || "").trim();
+          layer.font = textFont.value || layer.font;
+          layer.fontSize = parseInt(textSize.value || String(layer.fontSize), 10);
+          layer.fill = textColor.value || layer.fill;
+          layer.strokeWidth = parseInt(textOutline.value || String(layer.strokeWidth), 10);
+          layer.uppercase = !!textUpper.checked;
+          draw();
+        });
+
+        // Live update: size, color, outline, uppercase, font
+        textSize.addEventListener("input", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
+          if (!layer || layer.type !== "text") return;
+          layer.fontSize = parseInt(textSize.value || String(layer.fontSize), 10);
+          draw();
+        });
+        textColor.addEventListener("input", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
+          if (!layer || layer.type !== "text") return;
+          layer.fill = textColor.value || layer.fill;
+          draw();
+        });
+        textOutline.addEventListener("input", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
+          if (!layer || layer.type !== "text") return;
+          layer.strokeWidth = parseInt(textOutline.value || String(layer.strokeWidth), 10);
+          draw();
+        });
+        textUpper.addEventListener("change", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
+          if (!layer || layer.type !== "text") return;
+          layer.uppercase = !!textUpper.checked;
+          draw();
+        });
+        textFont.addEventListener("change", async () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
+          if (!layer || layer.type !== "text") return;
+          layer.font = textFont.value || layer.font;
+          if (document.fonts && document.fonts.ready) {
+            try { await document.fonts.ready; } catch {}
+          }
+          draw();
+        });
+        // Optional: live text content editing
+        textInput.addEventListener("input", () => {
+          const layer = layers.find((l) => l.id === selectedLayerId);
+          if (!layer || layer.type !== "text") return;
+          layer.text = (textInput.value || "").trim();
+          draw();
         });
 
         // Pointer dragging
@@ -987,7 +1274,7 @@
           const y = evt.clientY - rect.top;
           return { x, y };
         }
-        canvas.addEventListener('mousedown', (evt) => {
+        canvas.addEventListener("mousedown", (evt) => {
           const { x, y } = canvasPoint(evt);
           const layer = selectLayerByPoint(x, y);
           if (layer) {
@@ -997,60 +1284,86 @@
             draw();
           }
         });
-        window.addEventListener('mousemove', (evt) => {
+        window.addEventListener("mousemove", (evt) => {
           if (!isDragging) return;
           const { x, y } = canvasPoint(evt);
-          const layer = layers.find(l => l.id === selectedLayerId);
+          const layer = layers.find((l) => l.id === selectedLayerId);
           if (!layer) return;
           layer.x = x - dragOffset.x;
           layer.y = y - dragOffset.y;
           draw();
         });
-        window.addEventListener('mouseup', () => { isDragging = false; });
+        window.addEventListener("mouseup", () => {
+          isDragging = false;
+        });
 
         // Touch dragging
-        canvas.addEventListener('touchstart', (evt) => {
-          const t = evt.touches[0];
-          const rect = canvas.getBoundingClientRect();
-          const x = t.clientX - rect.left;
-          const y = t.clientY - rect.top;
-          const layer = selectLayerByPoint(x, y);
-          if (layer) {
-            isDragging = true;
-            dragOffset.x = x - layer.x;
-            dragOffset.y = y - layer.y;
+        canvas.addEventListener(
+          "touchstart",
+          (evt) => {
+            const t = evt.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = t.clientX - rect.left;
+            const y = t.clientY - rect.top;
+            const layer = selectLayerByPoint(x, y);
+            if (layer) {
+              isDragging = true;
+              dragOffset.x = x - layer.x;
+              dragOffset.y = y - layer.y;
+              draw();
+            }
+          },
+          { passive: true }
+        );
+        canvas.addEventListener(
+          "touchmove",
+          (evt) => {
+            if (!isDragging) return;
+            const t = evt.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = t.clientX - rect.left;
+            const y = t.clientY - rect.top;
+            const layer = layers.find((l) => l.id === selectedLayerId);
+            if (!layer) return;
+            layer.x = x - dragOffset.x;
+            layer.y = y - dragOffset.y;
             draw();
-          }
-        }, { passive: true });
-        canvas.addEventListener('touchmove', (evt) => {
-          if (!isDragging) return;
-          const t = evt.touches[0];
-          const rect = canvas.getBoundingClientRect();
-          const x = t.clientX - rect.left;
-          const y = t.clientY - rect.top;
-          const layer = layers.find(l => l.id === selectedLayerId);
-          if (!layer) return;
-          layer.x = x - dragOffset.x;
-          layer.y = y - dragOffset.y;
-          draw();
-        }, { passive: true });
-        canvas.addEventListener('touchend', () => { isDragging = false; }, { passive: true });
+          },
+          { passive: true }
+        );
+        canvas.addEventListener(
+          "touchend",
+          () => {
+            isDragging = false;
+          },
+          { passive: true }
+        );
 
         // Copy to clipboard / download fallback
-        copyBtn.addEventListener('click', async () => {
+        copyBtn.addEventListener("click", async () => {
           const dpr = window.devicePixelRatio || 1;
           const w = canvas.width / dpr;
           const h = canvas.height / dpr;
-          const off = document.createElement('canvas');
+          const off = document.createElement("canvas");
           off.width = Math.floor(w);
           off.height = Math.floor(h);
-          const octx = off.getContext('2d');
+          const octx = off.getContext("2d");
 
           if (baseImage) {
-            const fit = contain(baseImage.naturalWidth, baseImage.naturalHeight, w, h);
+            const fit = contain(
+              baseImage.naturalWidth,
+              baseImage.naturalHeight,
+              w,
+              h
+            );
             octx.drawImage(baseImage, fit.x, fit.y, fit.width, fit.height);
+            // Clip overlays to the bounds of the base image on export
+            octx.save();
+            octx.beginPath();
+            octx.rect(fit.x, fit.y, fit.width, fit.height);
+            octx.clip();
           } else {
-            octx.fillStyle = '#ffffff';
+            octx.fillStyle = "#ffffff";
             octx.fillRect(0, 0, w, h);
           }
           for (const layer of layers) {
@@ -1058,41 +1371,68 @@
             octx.translate(layer.x, layer.y);
             octx.rotate((layer.rotation * Math.PI) / 180);
             octx.scale(layer.flipH ? -1 : 1, layer.flipV ? -1 : 1);
-            const imgW = layer.image.naturalWidth * layer.scale;
-            const imgH = layer.image.naturalHeight * layer.scale;
-            octx.drawImage(layer.image, -imgW / 2, -imgH / 2, imgW, imgH);
+            if (layer.type === "text") {
+              const text = layer.uppercase ? layer.text.toUpperCase() : layer.text;
+              octx.textAlign = "center";
+              octx.textBaseline = "middle";
+              octx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+              octx.lineJoin = "round";
+              if (layer.strokeWidth > 0) {
+                octx.strokeStyle = layer.stroke;
+                octx.lineWidth = layer.strokeWidth;
+                octx.strokeText(text, 0, 0);
+              }
+              octx.fillStyle = layer.fill;
+              octx.fillText(text, 0, 0);
+            } else {
+              const imgW = layer.image.naturalWidth * layer.scale;
+              const imgH = layer.image.naturalHeight * layer.scale;
+              octx.drawImage(layer.image, -imgW / 2, -imgH / 2, imgW, imgH);
+            }
             octx.restore();
           }
 
+          // Restore export clipping
+          if (baseImage) {
+            octx.restore();
+          }
+
+          if (document.fonts && document.fonts.ready) {
+            try { await document.fonts.ready; } catch {}
+          }
+
           try {
-            const blob = await new Promise(res => off.toBlob(res, 'image/png'));
-            if (!blob) throw new Error('Blob unavailable');
+            const blob = await new Promise((res) =>
+              off.toBlob(res, "image/png")
+            );
+            if (!blob) throw new Error("Blob unavailable");
             if (navigator.clipboard && window.ClipboardItem) {
-              await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+              await navigator.clipboard.write([
+                new ClipboardItem({ "image/png": blob }),
+              ]);
               const original = copyBtn.textContent;
-              copyBtn.textContent = 'Copied! 😿👍';
-              burstEmojis(['😿','👍','✨','🖼️']);
-              setTimeout(() => copyBtn.textContent = original, 1200);
+              copyBtn.textContent = "Copied! 😿👍";
+              burstEmojis(["😿", "👍", "✨", "🖼️"]);
+              setTimeout(() => (copyBtn.textContent = original), 1200);
             } else {
               const url = URL.createObjectURL(blob);
-              const a = document.createElement('a');
+              const a = document.createElement("a");
               a.href = url;
-              a.download = 'ok-meme.png';
+              a.download = "ok-meme.png";
               document.body.appendChild(a);
               a.click();
               a.remove();
               URL.revokeObjectURL(url);
               const original = copyBtn.textContent;
-              copyBtn.textContent = 'Downloaded ok-meme.png';
-              burstEmojis(['📥','😿','👍','✨']);
-              setTimeout(() => copyBtn.textContent = original, 1400);
+              copyBtn.textContent = "Downloaded ok-meme.png";
+              burstEmojis(["📥", "😿", "👍", "✨"]);
+              setTimeout(() => (copyBtn.textContent = original), 1400);
             }
           } catch (err) {
-            alert('Failed to copy/download');
+            alert("Failed to copy/download");
           }
         });
       })();
-
     </script>
   </body>
 </html>
