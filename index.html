@@ -405,7 +405,7 @@
             <div class="flex flex-col gap-3">
               <div id="text-edit-section" class="hidden">
                 <div class="text-sm text-gray-600 mt-3">Edit text:</div>
-                <div class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="mt-2 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
                   <label class="block">
                     <span class="text-xs text-gray-600">Size</span>
                     <input
@@ -423,7 +423,8 @@
                       id="text-color"
                       type="color"
                       value="#ffffff"
-                      class="w-full h-9 p-0 border border-gray-200 rounded-xl"
+                      class="h-9 p-0 border border-gray-200 rounded-xl"
+                      style="width: 50%"
                     />
                   </label>
                   <label class="block">
@@ -438,6 +439,16 @@
                       class="w-full"
                     />
                   </label>
+                  <div class="flex justify-end">
+                    <button
+                      id="delete-text"
+                      class="px-3 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600"
+                      aria-label="Delete active text"
+                      title="Delete active text"
+                    >
+                      🗑️
+                    </button>
+                  </div>
                 </div>
                 <div class="mt-2 flex flex-wrap items-center gap-2">
                   <select
@@ -526,7 +537,7 @@
                   </button>
                 </div>
               </div>
-              <div class="mt-4">
+              <div id="add-text-section" class="mt-4">
                 <div class="text-sm text-gray-600">Add text caption</div>
                 <div class="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
@@ -550,6 +561,12 @@
                   class="w-full px-5 py-4 rounded-2xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 hover-wiggle"
                 >
                   Copy to Clipboard
+                </button>
+                <button
+                  id="download-meme"
+                  class="mt-2 w-full px-5 py-4 rounded-2xl bg-black text-white font-semibold hover:bg-gray-800 hover-wiggle hidden"
+                >
+                  Download Meme
                 </button>
               </div>
             </div>
@@ -948,6 +965,8 @@
         const flipVBtn = document.getElementById("flip-v");
         const delBtn = document.getElementById("delete-layer");
         const copyBtn = document.getElementById("copy-meme");
+        const downloadMemeBtn = document.getElementById("download-meme");
+        const deleteTextBtn = document.getElementById("delete-text");
 
         // Viewport-based behavior: prefer download on small screens
         let preferDownload = window.matchMedia("(max-width: 799px)").matches;
@@ -957,13 +976,44 @@
             ? "Download Meme"
             : "Copy to Clipboard";
         }
-        updateCopyBtnLabel();
+        function updateDownloadBtnVisibility() {
+          if (!downloadMemeBtn) return;
+          // Show download button only on desktop (>= 800px)
+          if (preferDownload) {
+            downloadMemeBtn.classList.add("hidden");
+          } else {
+            downloadMemeBtn.classList.remove("hidden");
+          }
+        }
+        function refreshExportButtons() {
+          // Always update labels/viewport toggles first
+          updateCopyBtnLabel();
+          // Hide both export buttons if no base image
+          if (!baseImage) {
+            copyBtn.classList.add("hidden");
+            if (downloadMemeBtn) downloadMemeBtn.classList.add("hidden");
+            // Also hide creation controls when no base image
+            if (addCatBtn) addCatBtn.classList.add("hidden");
+            const textEditEl = document.getElementById("text-edit-section");
+            if (textEditEl) textEditEl.classList.add("hidden");
+            const addTextSection = document.getElementById("add-text-section");
+            if (addTextSection) addTextSection.classList.add("hidden");
+          } else {
+            copyBtn.classList.remove("hidden");
+            updateDownloadBtnVisibility();
+            // Show add-cat only when base image exists
+            if (addCatBtn) addCatBtn.classList.remove("hidden");
+            const addTextSection = document.getElementById("add-text-section");
+            if (addTextSection) addTextSection.classList.remove("hidden");
+          }
+        }
+        refreshExportButtons();
         const mq = window.matchMedia("(max-width: 799px)");
         // Update on MQ change
         if (mq && mq.addEventListener) {
           mq.addEventListener("change", (e) => {
             preferDownload = e.matches;
-            updateCopyBtnLabel();
+            refreshExportButtons();
           });
         }
         // Fallback: update on resize
@@ -971,7 +1021,7 @@
           const current = window.innerWidth < 800;
           if (current !== preferDownload) {
             preferDownload = current;
-            updateCopyBtnLabel();
+            refreshExportButtons();
           }
         });
 
@@ -1217,6 +1267,7 @@
             baseImage = img;
             URL.revokeObjectURL(url);
             draw();
+            refreshExportButtons();
           };
           img.src = url;
         });
@@ -1228,12 +1279,14 @@
             img.onload = () => {
               baseImage = img;
               draw();
+              refreshExportButtons();
             };
             img.src = "template.png";
           });
         }
 
         addCatBtn.addEventListener("click", async () => {
+          if (!baseImage) return;
           try {
             const layer = await createCatLayer();
             layer.type = "image";
@@ -1283,6 +1336,20 @@
           }
         });
 
+        // Delete active text via text edit row button
+        if (deleteTextBtn) {
+          deleteTextBtn.addEventListener("click", () => {
+            const idx = layers.findIndex((l) => l.id === selectedLayerId);
+            if (idx >= 0 && layers[idx].type === "text") {
+              layers.splice(idx, 1);
+              selectedLayerId = null;
+              // Hide the text edit section when no active text
+              if (textEditSection) textEditSection.classList.add("hidden");
+              draw();
+            }
+          });
+        }
+
         // Text layer creation helpers
         function createTextLayerAt(yPos) {
           const w = canvas.width / (window.devicePixelRatio || 1);
@@ -1317,7 +1384,10 @@
           draw();
         }
 
-        addTextBtn.addEventListener("click", () => addTextCommon());
+        addTextBtn.addEventListener("click", () => {
+          if (!baseImage) return;
+          addTextCommon();
+        });
         // Live update: size, color, outline, font
         textSize.addEventListener("input", () => {
           const layer = layers.find((l) => l.id === selectedLayerId);
@@ -1449,6 +1519,7 @@
 
         // Copy to clipboard or download based on viewport preference
         copyBtn.addEventListener("click", async () => {
+          if (!baseImage) return; // no image: do nothing
           const dpr = window.devicePixelRatio || 1;
           const w = canvas.width / dpr;
           const h = canvas.height / dpr;
@@ -1558,6 +1629,100 @@
             alert("Failed to copy/download");
           }
         });
+
+        // Dedicated desktop Download button: always downloads
+        if (downloadMemeBtn) {
+          downloadMemeBtn.addEventListener("click", async () => {
+            if (!baseImage) return; // no image: do nothing
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+
+            let exportW = Math.floor(w);
+            let exportH = Math.floor(h);
+            let offsetX = 0;
+            let offsetY = 0;
+
+            let fit = null;
+            if (baseImage) {
+              fit = contain(
+                baseImage.naturalWidth,
+                baseImage.naturalHeight,
+                w,
+                h
+              );
+              exportW = Math.floor(fit.width);
+              exportH = Math.floor(fit.height);
+              offsetX = fit.x;
+              offsetY = fit.y;
+            }
+
+            const off = document.createElement("canvas");
+            off.width = exportW;
+            off.height = exportH;
+            const octx = off.getContext("2d");
+
+            if (baseImage && fit) {
+              octx.drawImage(baseImage, 0, 0, fit.width, fit.height);
+            } else {
+              octx.fillStyle = "#ffffff";
+              octx.fillRect(0, 0, exportW, exportH);
+            }
+
+            for (const layer of layers) {
+              octx.save();
+              const tx = layer.x - offsetX;
+              const ty = layer.y - offsetY;
+              octx.translate(tx, ty);
+              octx.rotate((layer.rotation * Math.PI) / 180);
+              octx.scale(layer.flipH ? -1 : 1, layer.flipV ? -1 : 1);
+              if (layer.type === "text") {
+                const text = layer.text;
+                octx.textAlign = "center";
+                octx.textBaseline = "middle";
+                octx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+                octx.lineJoin = "round";
+                if (layer.strokeWidth > 0) {
+                  octx.strokeStyle = layer.stroke;
+                  octx.lineWidth = layer.strokeWidth;
+                  octx.strokeText(text, 0, 0);
+                }
+                octx.fillStyle = layer.fill;
+                octx.fillText(text, 0, 0);
+              } else {
+                const imgW = layer.image.naturalWidth * layer.scale;
+                const imgH = layer.image.naturalHeight * layer.scale;
+                octx.drawImage(layer.image, -imgW / 2, -imgH / 2, imgW, imgH);
+              }
+              octx.restore();
+            }
+
+            if (document.fonts && document.fonts.ready) {
+              try {
+                await document.fonts.ready;
+              } catch {}
+            }
+
+            try {
+              const blob = await new Promise((res) => off.toBlob(res, "image/png"));
+              if (!blob) throw new Error("Blob unavailable");
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "ok-meme.png";
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              URL.revokeObjectURL(url);
+              const original = downloadMemeBtn.textContent;
+              downloadMemeBtn.textContent = "Downloaded ok-meme.png";
+              burstEmojis(["📥", "😿", "👍", "✨"]);
+              setTimeout(() => (downloadMemeBtn.textContent = original), 1400);
+            } catch (err) {
+              alert("Failed to download");
+            }
+          });
+        }
       })();
 
       // OK PFP Maker logic
