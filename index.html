@@ -405,7 +405,9 @@
             <div class="flex flex-col gap-3">
               <div id="text-edit-section" class="hidden">
                 <div class="text-sm text-gray-600 mt-3">Edit text:</div>
-                <div class="mt-2 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+                <div
+                  class="mt-2 grid grid-cols-1 sm:grid-cols-4 gap-3 items-end"
+                >
                   <label class="block">
                     <span class="text-xs text-gray-600">Size</span>
                     <input
@@ -747,7 +749,7 @@
       (function populateMemeGrid() {
         const grid = document.getElementById("meme-grid");
         if (!grid) return;
-        const maxCount = 30; // try up to 30; missing files will be skipped
+        const maxCount = 40; // try up to 30; missing files will be skipped
         for (let i = 1; i <= maxCount; i++) {
           const card = document.createElement("div");
           card.className =
@@ -1680,7 +1682,10 @@
                 const text = layer.text;
                 octx.textAlign = "center";
                 octx.textBaseline = "middle";
-                octx.font = `${layer.weight} ${Math.max(8, layer.fontSize)}px ${textFamilyFrom(layer.font)}`;
+                octx.font = `${layer.weight} ${Math.max(
+                  8,
+                  layer.fontSize
+                )}px ${textFamilyFrom(layer.font)}`;
                 octx.lineJoin = "round";
                 if (layer.strokeWidth > 0) {
                   octx.strokeStyle = layer.stroke;
@@ -1704,7 +1709,9 @@
             }
 
             try {
-              const blob = await new Promise((res) => off.toBlob(res, "image/png"));
+              const blob = await new Promise((res) =>
+                off.toBlob(res, "image/png")
+              );
               if (!blob) throw new Error("Blob unavailable");
               const url = URL.createObjectURL(blob);
               const a = document.createElement("a");
