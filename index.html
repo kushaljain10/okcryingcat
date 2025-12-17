@@ -749,7 +749,7 @@
       (function populateMemeGrid() {
         const grid = document.getElementById("meme-grid");
         if (!grid) return;
-        const maxCount = 54; // try up to 30; missing files will be skipped
+        const maxCount = 90; // try up to 30; missing files will be skipped
         for (let i = 1; i <= maxCount; i++) {
           const card = document.createElement("div");
           card.className =
@@ -1737,6 +1737,7 @@
         const canvas = document.getElementById("pfp-canvas");
         if (!canvas) return;
         const ctx = canvas.getContext("2d");
+        const PFP_SIZE = 1080; // logical preview and export size
 
         // Controls
         const fileInput = document.getElementById("pfp-file");
@@ -1762,12 +1763,10 @@
         }
 
         function resizeCanvas() {
-          const wrap = canvas.parentElement; // aspect-square container
-          const rect = wrap.getBoundingClientRect();
-          const size = Math.floor(rect.width);
           const ratio = dpr();
-          canvas.width = Math.max(1, Math.floor(size * ratio));
-          canvas.height = Math.max(1, Math.floor(size * ratio));
+          // Keep a fixed logical size of 1080×1080, scale buffer by DPR
+          canvas.width = Math.floor(PFP_SIZE * ratio);
+          canvas.height = Math.floor(PFP_SIZE * ratio);
           draw();
         }
 
@@ -1785,8 +1784,8 @@
 
         function draw() {
           const ratio = dpr();
-          const w = canvas.width / ratio;
-          const h = canvas.height / ratio;
+          const w = PFP_SIZE;
+          const h = PFP_SIZE;
           ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
           ctx.clearRect(0, 0, w, h);
           ctx.fillStyle = "#f8fafc";
@@ -1903,15 +1902,14 @@
         });
 
         downloadBtn.addEventListener("click", async () => {
-          const ratio = dpr();
-          const w = canvas.width / ratio;
-          const h = canvas.height / ratio;
-          // Render to offscreen to ensure clean pixels
+          const w = PFP_SIZE;
+          const h = PFP_SIZE;
+          // Render to offscreen at exact 1080×1080 output size
           const off = document.createElement("canvas");
-          off.width = Math.floor(w * ratio);
-          off.height = Math.floor(h * ratio);
+          off.width = w;
+          off.height = h;
           const octx = off.getContext("2d");
-          octx.setTransform(ratio, 0, 0, ratio, 0, 0);
+          octx.setTransform(1, 0, 0, 1, 0, 0);
 
           // Draw base
           if (baseImage) {
