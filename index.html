@@ -215,6 +215,61 @@
           transform: translate(var(--toX), var(--toY)) rotate(var(--toR, 0deg));
         }
       }
+      /* Minimal full-screen lightbox for memes */
+      .lightbox-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      .lightbox-overlay.show {
+        display: flex;
+      }
+      .lightbox-image {
+        max-width: 90vw;
+        max-height: 90vh;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      .lightbox-nav,
+      .lightbox-close {
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 9999px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.12);
+        color: #000;
+        backdrop-filter: blur(6px);
+        cursor: pointer;
+        font-size: 26px;
+        line-height: 1;
+      }
+      .lightbox-nav.left {
+        left: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .lightbox-nav.right {
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+      .lightbox-close {
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+      }
+      .lightbox-nav:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
     </style>
   </head>
   <body class="bg-white text-gray-900 font-sans">
@@ -745,30 +800,128 @@
         });
       }
 
-      // Populate meme grid dynamically from /memes/1.png..N
+      // Populate meme grid dynamically from /memes/1.(png|jpeg)..N
       (function populateMemeGrid() {
         const grid = document.getElementById("meme-grid");
         if (!grid) return;
-        const maxCount = 90; // try up to 30; missing files will be skipped
+        const maxCount = 126; // Total images available (mixed PNG/JPEG)
         for (let i = 1; i <= maxCount; i++) {
           const card = document.createElement("div");
           card.className =
             "group relative aspect-square rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden hover:scale-[1.02] transition-transform reveal";
           const img = document.createElement("img");
-          img.src = `memes/${i}.png`;
           img.alt = `$ok meme ${i}`;
           img.className = "w-full h-full object-cover";
           img.loading = "lazy";
-          img.onerror = () => {
-            // Remove card if image is missing
-            card.remove();
+          // Try PNG then JPEG; remove card if both missing
+          const exts = ["png", "jpeg"];
+          let tryIndex = 0;
+          const tryLoad = () => {
+            if (tryIndex >= exts.length) {
+              card.remove();
+              return;
+            }
+            img.src = `memes/${i}.${exts[tryIndex]}`;
+            tryIndex++;
           };
+          img.onerror = tryLoad;
+          tryLoad();
           card.appendChild(img);
           grid.appendChild(card);
         }
       })();
 
-      // Download All: fetch memes/1.png..N (skip missing) and zip to ok.zip
+      // Minimal full-screen lightbox for meme images
+      (function memeLightbox() {
+        const grid = document.getElementById("meme-grid");
+        if (!grid) return;
+        let overlay = null;
+        let imageEl = null;
+        let prevBtn = null;
+        let nextBtn = null;
+        let closeBtn = null;
+        let currentIndex = -1;
+
+        function buildOverlay() {
+          overlay = document.createElement("div");
+          overlay.className = "lightbox-overlay";
+
+          imageEl = document.createElement("img");
+          imageEl.className = "lightbox-image";
+          overlay.appendChild(imageEl);
+
+          prevBtn = document.createElement("button");
+          prevBtn.className = "lightbox-nav left";
+          prevBtn.textContent = "‹";
+          overlay.appendChild(prevBtn);
+
+          nextBtn = document.createElement("button");
+          nextBtn.className = "lightbox-nav right";
+          nextBtn.textContent = "›";
+          overlay.appendChild(nextBtn);
+
+          closeBtn = document.createElement("button");
+          closeBtn.className = "lightbox-close";
+          closeBtn.textContent = "×";
+          overlay.appendChild(closeBtn);
+
+          document.body.appendChild(overlay);
+
+          prevBtn.addEventListener("click", () => navigate(-1));
+          nextBtn.addEventListener("click", () => navigate(1));
+          closeBtn.addEventListener("click", close);
+          overlay.addEventListener("click", (e) => {
+            if (e.target === overlay) close();
+          });
+
+          document.addEventListener("keydown", (e) => {
+            if (!overlay.classList.contains("show")) return;
+            if (e.key === "Escape") close();
+            else if (e.key === "ArrowLeft") navigate(-1);
+            else if (e.key === "ArrowRight") navigate(1);
+          });
+        }
+
+        function openAt(index) {
+          const imgs = Array.from(grid.querySelectorAll("img"));
+          if (index < 0 || index >= imgs.length) return;
+          currentIndex = index;
+          if (!overlay) buildOverlay();
+          imageEl.src = imgs[currentIndex].src;
+          overlay.classList.add("show");
+          updateNavState(imgs.length);
+        }
+
+        function updateNavState(len) {
+          if (!prevBtn || !nextBtn) return;
+          prevBtn.disabled = currentIndex <= 0;
+          nextBtn.disabled = currentIndex >= len - 1;
+        }
+
+        function navigate(delta) {
+          const imgs = Array.from(grid.querySelectorAll("img"));
+          const nextIdx = currentIndex + delta;
+          if (nextIdx < 0 || nextIdx >= imgs.length) return;
+          currentIndex = nextIdx;
+          imageEl.src = imgs[currentIndex].src;
+          updateNavState(imgs.length);
+        }
+
+        function close() {
+          if (!overlay) return;
+          overlay.classList.remove("show");
+        }
+
+        grid.addEventListener("click", (e) => {
+          const img = e.target.closest("img");
+          if (!img) return;
+          const imgs = Array.from(grid.querySelectorAll("img"));
+          const idx = imgs.indexOf(img);
+          openAt(idx);
+        });
+      })();
+
+      // Download All: fetch memes/1.(png|jpeg)..N (skip missing) and zip to ok.zip
       document
         .getElementById("download-all")
         .addEventListener("click", async () => {
@@ -780,22 +933,27 @@
             await loadJSZip();
             const zip = new JSZip();
             const folder = zip.folder("ok");
-            const files = Array.from(
-              { length: 30 },
-              (_, i) => `memes/${i + 1}.png`
-            );
-
-            // Fetch images as ArrayBuffers, skipping missing
+            const MAX = 126;
+            const exts = ["png", "jpeg"];
             const buffers = [];
-            for (const path of files) {
-              try {
-                const res = await fetch(path);
-                if (!res.ok) continue;
-                const buf = await res.arrayBuffer();
-                buffers.push({ name: path.split("/").pop(), buf });
-              } catch (_) {
-                // skip missing
+            // For each index, try PNG then JPEG; add whichever exists
+            for (let i = 1; i <= MAX; i++) {
+              let found = false;
+              for (const ext of exts) {
+                const path = `memes/${i}.${ext}`;
+                try {
+                  const res = await fetch(path);
+                  if (!res.ok) continue;
+                  const buf = await res.arrayBuffer();
+                  buffers.push({ name: `${i}.${ext}`, buf });
+                  found = true;
+                  break;
+                } catch (_) {
+                  // skip and try next extension
+                }
               }
+              // if neither PNG nor JPEG found, skip index
+              if (!found) continue;
             }
 
             // Add to zip under ok/
