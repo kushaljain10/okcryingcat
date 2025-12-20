@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/pfp-maker",
+      "destination": "https://okcat-pfp.vercel.app"
+    },
+    {
+      "source": "/pfp-maker/(.*)",
+      "destination": "https://okcat-pfp.vercel.app/$1"
+    }
+  ]
+}
